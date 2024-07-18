@@ -2,7 +2,6 @@
 @section('content')
 <div class="container mt-3">
     <h2 class="mb-4">Edit Category</h2>
-
     @if ($errors->any())
     <div class="alert alert-danger" role="alert">
         <ul>
@@ -12,7 +11,6 @@
         </ul>
     </div>
     @endif
-
     <form method="POST" action="{{ route('categories.update', $category->id) }}">
         @csrf
         @method('PUT')
@@ -26,19 +24,6 @@
                 </span>
             @enderror
         </div>
-
-        {{-- <div class="mb-3">
-            <label for="parent_id" class="form-label">Parent Category (Optional)</label>
-            <select class="form-select" id="parent_id" name="parent_id">
-                <option value="">None</option>
-                 @foreach ($parentCategories as $parentCategory)
-                    <option value="{{ $parentCategory->id }}" @if($parentCategory->id == $category->parent_id) selected @endif>
-                        {{ $parentCategory->name }}
-                    </option>
-                @endforeach 
-            </select>
-        </div> --}}
-
         <button type="submit" class="btn btn-primary">Update Category</button>
         <a href="{{ route('categories.index') }}" class="btn btn-md btn-secondary">Back</a>
     </form>

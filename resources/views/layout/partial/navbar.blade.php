@@ -9,7 +9,6 @@
                  <li class="nav-item">
                      <a class="nav-link" href="/">Home</a>
                  </li>
-                
                  <li class="nav-item">
                      <a class="nav-link" href="{{ route('categories.categoryTree') }}">Category Tree</a>
                  </li>
@@ -19,8 +18,6 @@
                  <li class="nav-item">
                      <a class="nav-link" href="{{ route('subcategories.index') }}">SubCategory</a>
                  </li>
-                 
-
              </ul>
          </div>
      </div>

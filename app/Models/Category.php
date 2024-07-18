@@ -9,45 +9,40 @@ class Category extends Model
 {
     protected $fillable = ['name', 'parent_id'];
 
-    
-public function parentCategory()
-{
-    return $this->belongsTo(Category::class, 'parent_id');
-}
 
- 
-
-    public function children()
-{
-    return $this->hasMany(Category::class, 'parent_id')->with('children');
-}
-// YourController.php
-
-public function showCategoryTree()
-{
-    $categories = Category::all();
-
-    $categoryTree = $this->buildTree($categories);
-
-    return view('categories.tree', compact('categoryTree'));
-}
-
-private function buildTree($categories, $parentId = null)
-{
-    $branch = [];
-
-    foreach ($categories as $category) {
-        if ($category->parent_id == $parentId) {
-            $children = $this->buildTree($categories, $category->id);
-            if ($children) {
-                $category->children = $children;
-            }
-            $branch[] = $category;
-        }
+    public function parentCategory()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    return $branch;
-}
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id')->with('children');
+    }
 
-}
 
+    public function showCategoryTree()
+    {
+        $categories = Category::all();
+
+        $categoryTree = $this->buildTree($categories);
+
+        return view('categories.tree', compact('categoryTree'));
+    }
+
+    private function buildTree($categories, $parentId = null)
+    {
+        $branch = [];
+
+        foreach ($categories as $category) {
+            if ($category->parent_id == $parentId) {
+                $children = $this->buildTree($categories, $category->id);
+                if ($children) {
+                    $category->children = $children;
+                }
+                $branch[] = $category;
+            }
+        }
+        return $branch;
+    }
+}
