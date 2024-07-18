@@ -9,12 +9,12 @@ Route::get('/', function () {
 });
 
 Route::get('/categories/index', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/categoryTree', [CategoryController::class, 'categoryTree'])->name('categories.categoryTree');
 Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
 Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
 Route::get('/categories/show/{id}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
 Route::put('/categories/update/{id}', [CategoryController::class, 'update'])->name('categories.update');
-
 Route::delete('/categories/destroy/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
 

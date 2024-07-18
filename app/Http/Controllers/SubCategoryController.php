@@ -1,24 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Category;
 use Illuminate\Http\Request;
 
 class SubCategoryController extends Controller
 {
-    
 
     public function index()
     {
-        //echo ('hjhdjk');die();
-        $categories = Category::whereNot("parent_id",0)->get();
+        $categories = Category::whereNot("parent_id", 0)->orderBy('name', 'asc')->get();
         return view('subcategories.list', compact('categories'));
     }
 
     public function create()
     {
-        $categories = Category::where("parent_id",0)->get();
-        return view('subcategories.add',compact('categories'));
+        $categories = Category::where("parent_id", 0)->get();
+        return view('subcategories.add', compact('categories'));
     }
 
     public function store(Request $request)
@@ -34,52 +33,41 @@ class SubCategoryController extends Controller
         return redirect()->route('subcategories.index');
     }
 
-  
 
-    public function edit(Request $request, $id)
-{
-    $category = Category::select(
-        'categories.*',
-        'main.name as main_category'
-    )
-    ->from('categories')
-    ->leftJoin('categories as main', 'categories.parent_id', '=', 'main.id')
-    ->withoutGlobalScopes()
-    ->find($id);
 
-    $parentCategories = Category::whereNull('parent_id')->get(); // Fetch all top-level categories
+    public function edit($id)
+    {
+        $category = Category::find($id);
+        $allCategories = Category::where("parent_id", 0)->get();
+        return view('subcategories.edit', compact('category', 'allCategories'));
+    }
 
-    return view('subcategories.edit', compact('category', 'parentCategories'));
-}
-       
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'parent_id' => 'nullable|exists:categories,id',
+            'name' => 'required|unique:categories,name,' . $id,
         ]);
-    
-        $category = Category::findOrFail($id);
-        $category->name = $request->input('name');
-        $category->parent_id = $request->input('parent_id');
+
+        $category = Category::find($id);
+        $category->name = $request->name;
+        $category->parent_id = $request->parent_id;
         $category->save();
-    
+
         return redirect()->route('subcategories.index')->with('success', 'Category updated successfully!');
     }
-    
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
         $category->delete();
-        
-        return redirect()->route('subcategories.index')->with('success', 'Category deleted successfully!');
+    
+        return response()->json(['success' => 'Category deleted successfully!']);
     }
+    
 
-    public function show(Request $request)
+    public function show(Request $request, $id)
     {
-        $category = Category::find($request->id);
-        $category->load('parentCategory', 'children');
+        $category = Category::find($id);
+        $allCategories = Category::where("parent_id", 0)->get();
         return view('subcategories.view', compact('category'));
     }
 }
-
